@@ -4,52 +4,10 @@
     xmlns:i18n="http://namespaces.zope.org/i18n"
     i18n_domain="collective.optimage">
 
-  <five:registerPackage package="." initialize=".initialize" />
-
-
-  <subscriber for="plone.app.blob.interfaces.IATBlobImage
-                   zope.lifecycleevent.IObjectModifiedEvent"
-              handler=".events.optimage_event"
-            />
-
-  <adapter
-  	  name="jpegoptim"
-      for="plone.app.blob.interfaces.IATBlobImage
-           zope.publisher.interfaces.browser.IHTTPRequest"
-      provides="collective.optimage.interfaces.IOptimageProvider"
-      factory="collective.optimage.adapters.jpegoptim.JpegOptim"
-      />
-
-  <adapter
-  	  name="jpegtran"
-      for="plone.app.blob.interfaces.IATBlobImage
-           zope.publisher.interfaces.browser.IHTTPRequest"
-      provides="collective.optimage.interfaces.IOptimageProvider"
-      factory="collective.optimage.adapters.jpegtran.JpegTran"
-      />
-
-  <adapter
-  	  name="optipng"
-      for="plone.app.blob.interfaces.IATBlobImage
-           zope.publisher.interfaces.browser.IHTTPRequest"
-      provides="collective.optimage.interfaces.IOptimageProvider"
-      factory="collective.optimage.adapters.optipng.OptiPng"
-      />
-
-  <adapter
-  	  name="pngout"
-      for="plone.app.blob.interfaces.IATBlobImage
-           zope.publisher.interfaces.browser.IHTTPRequest"
-      provides="collective.optimage.interfaces.IOptimageProvider"
-      factory="collective.optimage.adapters.pngout.PngOut"
-      />
-
-  <adapter
-  	  name="gifsicle"
-      for="plone.app.blob.interfaces.IATBlobImage
-           zope.publisher.interfaces.browser.IHTTPRequest"
-      provides="collective.optimage.interfaces.IOptimageProvider"
-      factory="collective.optimage.adapters.gifsicle.Gifsicle"
-      />
+  <subscriber
+       for="plone.app.blob.interfaces.IATBlobImage
+            zope.lifecycleevent.IObjectModifiedEvent"
+       handler=".events.optimage_event"
+       />
  
 </configure>
