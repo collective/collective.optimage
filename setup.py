@@ -28,7 +28,7 @@ setup(name='collective.optimage',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          'Plone',
+          'plone.app.blob',
       ],
       entry_points="""
       # -*- Entry points: -*-

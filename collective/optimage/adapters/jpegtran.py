@@ -19,6 +19,5 @@ class JpegTran(CoreImageOptimizeAdapter):
         return [self.command] + self.arguments + ['-outfile', self.output_name, self.input.name]
 
     def optimize(self):
-        if self.command!='False':
-            self._optimize(temp_output_file=True)
-            self._optimizeScales(temp_output_file=True)
+        self._optimize(temp_output_file=True)
+        self._optimizeScales(temp_output_file=True)

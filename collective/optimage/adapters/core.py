@@ -2,7 +2,6 @@
 
 import subprocess
 import tempfile
-
 import shutil
 import os, os.path
 
@@ -85,7 +84,6 @@ class CoreImageOptimizeAdapter(object):
         return [self.command] + self.arguments + [self.output_name]
     
     def optimize(self):
-        if self.command!='False':
-            self._optimize()
-            self._optimizeScales()
+        self._optimize()
+        self._optimizeScales()
 
