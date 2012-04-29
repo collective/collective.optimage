@@ -6,17 +6,17 @@ from zope.interface import implements
 from collective.optimage.interfaces import IOptimageProvider
 from collective.optimage.adapters.core import CoreImageOptimizeAdapter
 
-class JpegTran(CoreImageOptimizeAdapter):
-    """Optimize using jpegtran"""
+class PngOut(CoreImageOptimizeAdapter):
+    """Optimize using ongout"""
     implements(IOptimageProvider)
     
-    for_image = 'jpeg'
-    command = os.environ.get('JPEGTRAN_PATH') or 'jpegtran'
-    arguments = ['-copy', 'none', '-progressive']
-    
+    for_image = 'png'
+    command = os.environ.get('PNGOUT_PATH') or 'pngout'
+    arguments = ['-y', '-q']
+
     def _getArguments(self):
         """Get arguments for the external process"""
-        return [self.command] + self.arguments + ['-outfile', self.output_name, self.input.name]
+        return [self.command] + self.arguments + [self.input.name, self.output_name]
 
     def optimize(self):
         if self.command!='False':

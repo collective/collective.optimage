@@ -7,14 +7,14 @@
   <five:registerPackage package="." initialize=".initialize" />
 
 
-  <subscriber for="Products.ATContentTypes.interfaces.image.IImageContent
+  <subscriber for="plone.app.blob.interfaces.IATBlobImage
                    zope.lifecycleevent.IObjectModifiedEvent"
               handler=".events.optimage_event"
             />
 
   <adapter
   	  name="jpegoptim"
-      for="Products.ATContentTypes.interfaces.image.IImageContent
+      for="plone.app.blob.interfaces.IATBlobImage
            zope.publisher.interfaces.browser.IHTTPRequest"
       provides="collective.optimage.interfaces.IOptimageProvider"
       factory="collective.optimage.adapters.jpegoptim.JpegOptim"
@@ -22,24 +22,31 @@
 
   <adapter
   	  name="jpegtran"
-      for="Products.ATContentTypes.interfaces.image.IImageContent
+      for="plone.app.blob.interfaces.IATBlobImage
            zope.publisher.interfaces.browser.IHTTPRequest"
       provides="collective.optimage.interfaces.IOptimageProvider"
       factory="collective.optimage.adapters.jpegtran.JpegTran"
       />
 
-
   <adapter
   	  name="optipng"
-      for="Products.ATContentTypes.interfaces.image.IImageContent
+      for="plone.app.blob.interfaces.IATBlobImage
            zope.publisher.interfaces.browser.IHTTPRequest"
       provides="collective.optimage.interfaces.IOptimageProvider"
       factory="collective.optimage.adapters.optipng.OptiPng"
       />
 
   <adapter
+  	  name="pngout"
+      for="plone.app.blob.interfaces.IATBlobImage
+           zope.publisher.interfaces.browser.IHTTPRequest"
+      provides="collective.optimage.interfaces.IOptimageProvider"
+      factory="collective.optimage.adapters.pngout.PngOut"
+      />
+
+  <adapter
   	  name="gifsicle"
-      for="Products.ATContentTypes.interfaces.image.IImageContent
+      for="plone.app.blob.interfaces.IATBlobImage
            zope.publisher.interfaces.browser.IHTTPRequest"
       provides="collective.optimage.interfaces.IOptimageProvider"
       factory="collective.optimage.adapters.gifsicle.Gifsicle"

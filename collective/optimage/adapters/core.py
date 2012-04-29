@@ -3,6 +3,13 @@
 import subprocess
 import tempfile
 
+import shutil
+import os, os.path
+
+from Acquisition import aq_base
+
+from plone.app.blob.config import blobScalesAttr
+
 from collective.optimage import logger
 
 class CoreImageOptimizeAdapter(object):
@@ -12,31 +19,73 @@ class CoreImageOptimizeAdapter(object):
     command = ''
     arguments = []
     
-    def __init__(self, context, request):
-        self.context = context
+    def __init__(self, instance, request):
+        self.instance = instance
         self.request = request
-        
-    def optimize(self):
-        context = self.context
-        field = context.getField('image')
-        filename = context.getFilename('image')
-        try:
-            blob = field.get(context).getBlob()
-            file = blob.open()
-        except AttributeError:
-            # No blob support? I.E: a news item 
-            file = tempfile.NamedTemporaryFile(suffix='.'+self.for_image, prefix='tmp-imageoptim-', delete=False)
-            file.write(str(context.getField('image').get(context).data))
-        file.close()
+        self.input = None
+        self.output_name = None
+
+    def _optimize(self, temp_output_file=False):    
+        instance = self.instance
+        field = instance.getField('image')
+        filename = instance.getFilename('image')
+        blob = field.get(instance).getBlob()
+        self._optimize_blob(blob, temp_output_file)
+
+    def _optimizeScales(self, temp_output_file=False):
+        """Optimize also scaled version of images"""
+        instance = self.instance
+        instance.getField('image').createScales(self.instance)
+        fields = getattr(aq_base(self.instance), blobScalesAttr, {})
+        for img in fields.values():
+            for format, data in img.items():
+                blob = data['blob']
+                self._optimize_blob(blob, temp_output_file, format="image_%s" % format)
+
+    def _optimize_blob(self, blob, temp_output_file=False, format="image"):
+        """
+        Internal optimization for blobs
+        Use temp_output_file to use a temporay file for storing output
+        (this for processes that do not change the input inline)
+        """
+        instance = self.instance
+        self.input = blob.open()
+        self.input.close()
+
+        if temp_output_file:
+            output = tempfile.NamedTemporaryFile(suffix='.'+self.for_image,
+                                                 prefix='tmp-imageoptim-',
+                                                 delete=False)
+            output.close()
+            self.output_name = output.name
+        else:
+            oname = os.path.join(os.path.dirname(self.input.name),
+                                 "tmp-imageoptim-" + os.path.basename(self.input.name) + '.'+self.for_image)
+            shutil.copyfile(self.input.name, oname)
+            self.output_name = oname
 
         try:
-            logger.info('Running %s on %s' % (self.command, context.absolute_url_path()))
-            subprocess.check_call([self.command] + self.arguments + [file.name])
-            context.setImage(open(file.name))
-            context.setFilename(filename, 'image')
-            #field.removeScales(context)
-            #field.createScales(context)
+            logger.info('Running %s on %s (%s)' % (self.command, instance.absolute_url_path(), format))
+            subprocess.check_call(self._getArguments())
         except subprocess.CalledProcessError, inst:
             logger.error("Running %s failed (exit status %s)" % (self.command, inst.returncode))
         except OSError:
             logger.error("Cannot run %s" % self.command)
+
+        blob.consumeFile(self.output_name)
+        
+        # cleanup
+        try:
+            os.remove(self.output_name)
+        except OSError:
+            pass
+    
+    def _getArguments(self):
+        """Get arguments for the external process"""
+        return [self.command] + self.arguments + [self.output_name]
+    
+    def optimize(self):
+        if self.command!='False':
+            self._optimize()
+            self._optimizeScales()
+
