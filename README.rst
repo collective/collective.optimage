@@ -105,7 +105,8 @@ Command line tool position
 --------------------------
 
 Right now this product will try to run all of the software given above simply calling them.
-If the program is not available at the user that run Zope process you could like to manually specify is it.
+If the program is not available at the user that run Zope process you could like to manually specify where
+is it.
 The same if the software has been manually installed (for example: if you manually downloaded
 and installed it inside a buildout installation and not system wide).
 
@@ -118,6 +119,12 @@ To do this, provide a environment var called "*SOFTWARENAME*\_PATH". An example:
     environment-vars =
         ...
         JPEGOPTIM_PATH /opt/local/bin/jpegoptim
+
+Content types
+-------------
+
+Right now Plone Image content type is the only one supported. Unluckily Plone News item is still not using
+Zope BLOB support so it will not gain any optimization.
 
 Performance
 -----------
