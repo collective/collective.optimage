@@ -34,7 +34,9 @@ class CoreImageOptimizeAdapter(object):
     def _optimizeScales(self, temp_output_file=False):
         """Optimize also scaled version of images"""
         instance = self.instance
-        instance.getField('image').createScales(self.instance)
+        fields = getattr(aq_base(self.instance), blobScalesAttr, {})
+        if not fields:
+            instance.getField('image').createScales(self.instance)
         fields = getattr(aq_base(self.instance), blobScalesAttr, {})
         for img in fields.values():
             for format, data in img.items():
@@ -49,6 +51,7 @@ class CoreImageOptimizeAdapter(object):
         """
         instance = self.instance
         self.input = blob.open()
+        input_size = os.path.getsize(self.input.name) 
         self.input.close()
 
         if temp_output_file:
@@ -71,7 +74,9 @@ class CoreImageOptimizeAdapter(object):
         except OSError:
             logger.error("Cannot run %s" % self.command)
 
-        blob.consumeFile(self.output_name)
+        # Some optimizers don't work inline, so a bigger output file can happen
+        if input_size > os.path.getsize(self.output_name):
+            blob.consumeFile(self.output_name)
         
         # cleanup
         try:
