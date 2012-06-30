@@ -5,7 +5,7 @@ version = '0.1.1.dev0'
 
 setup(name='collective.optimage',
       version=version,
-      description="Optimize Plone content images from Web usage",
+      description="Optimize Plone content images for Web usage",
       long_description=open("README.rst").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
       # Get more strings from
