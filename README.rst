@@ -129,8 +129,8 @@ Zope BLOB support so it will not gain any optimization.
 Performance
 -----------
 
-Operations done by external processes are synchronous, so blocking the Zope thread.
-This will lower your site performance when a user is providing new images
+Operations done by external processes are synchronous, so **blocking the Zope thread**.
+This will lower your site performance when an editor is providing new images
 (or modifying existings ones).
 
 You can make them quicker (but less efficient), playing with configuration options.
