@@ -26,23 +26,23 @@ To do this, include a proper zcml file in your buildout configuration::
 
     [instance]
     ...
-	eggs =
-	    Plone
-	    ...
-	    collective.optimage
-	
-	zcml =
-	    ...
-	    collective.optimage:wantedoptimizator1.zcml
-	    collective.optimage:wantedoptimizator2.zcml
-	    ...
+    eggs =
+        Plone
+        ...
+        collective.optimage
+    
+    zcml =
+        ...
+        collective.optimage:wantedoptimizator1.zcml
+        collective.optimage:wantedoptimizator2.zcml
+        ...
 
 All *wantedoptimizatorX* entries must be one of the supported software below.
 An example::
 
-	zcml =
-	    collective.optimage:jpegoptim.zcml
-	    collective.optimage:optipng.zcml
+    zcml =
+        collective.optimage:jpegoptim.zcml
+        collective.optimage:optipng.zcml
 
 To include them all (excluded pngout), just include the "*all.zcml*".
 
@@ -75,11 +75,11 @@ __ https://github.com/keul/collective.optimage/blob/master/collective/optimage/i
 An example::
 
       <adapter
-  	      name="yournewsoftware"
+          name="yournewsoftware"
           for="plone.app.blob.interfaces.IATBlobImage
                zope.publisher.interfaces.browser.IHTTPRequest"
           provides="collective.optimage.interfaces.IOptimageProvider"
-          factory="yout.products.module.YourSoftwareAdapter"
+          factory="your.products.module.YourSoftwareAdapter"
           />
 
 Finally, your adapter class will be something like this::
